@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Job Application Tracker</title>
+    
+    <!-- External Stylesheets -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    
+    <!-- External Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <style type="text/tailwindcss">
+        @theme {
+            --color-clifford: #da373d;
+        }
+    </style>
+    
+    <style>
+        * {
+            font-family: 'Geist', sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Application Header with Statistics -->
+    <header class="bg-base-200 py-6">
+        <div class="max-w-5xl mx-auto px-4">
+            <h1 class="text-2xl font-extrabold text-neutral mb-4">Job Application Tracker</h1>
+            
+            <!-- Statistics Dashboard -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <!-- Total Applications Card -->
+                <div class="stats-card bg-base-100 p-4 rounded-lg shadow-sm" data-stat-type="total">
+                    <div class="text-sm text-gray-500">Total</div>
+                    <div class="text-2xl font-bold text-neutral mt-1">
+                        <span class="counter" data-counter="total">8</span>
+                    </div>
+                </div>
+                
+                <!-- Interview Applications Card -->
+                <div class="stats-card bg-base-100 p-4 rounded-lg shadow-sm" data-stat-type="interview">
+                    <div class="text-sm text-gray-500">Interview</div>
+                    <div class="text-2xl font-bold text-neutral mt-1">
+                        <span class="counter" data-counter="interview">0</span>
+                    </div>
+                </div>
+                
+                <!-- Rejected Applications Card -->
+                <div class="stats-card bg-base-100 p-4 rounded-lg shadow-sm" data-stat-type="rejected">
+                    <div class="text-sm text-gray-500">Rejected</div>
+                    <div class="text-2xl font-bold text-neutral mt-1">
+                        <span class="counter" data-counter="rejected">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto px-4 py-6">
+        
+        <!-- Jobs Section Header -->
+        <section class="jobs-section-header">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold">Available Jobs</h2>
+                <div class="text-sm text-gray-500">
+                    <span class="jobs-count">8</span> jobs
+                </div>
+            </div>
+            
+            <!-- Filter Controls -->
+            <nav class="filter-controls flex items-center gap-3 mb-6" role="navigation" aria-label="Job filters">
+                <button class="filter-btn btn btn-primary btn-sm" 
+                        data-filter="all" 
+                        onclick="setActiveButton('filter-all')">
+                    All
+                </button>
+                <button class="filter-btn btn btn-outline btn-sm" 
+                        data-filter="interview" 
+                        onclick="setActiveButton('filter-interview')">
+                    Interview
+                </button>
+                <button class="filter-btn btn btn-outline btn-sm" 
+                        data-filter="rejected" 
+                        onclick="setActiveButton('filter-rejected')">
+                    Rejected
+                </button>
+            </nav>
+        </section>
+
+        <!-- Filtered Results Sections (Hidden by Default) -->
+        <section class="filtered-results interview-results space-y-4 mb-6" 
+                 data-filter-section="interview" 
+                 style="display: none;">
+            <!-- Interview jobs will be moved here dynamically -->
+        </section>
+
+        <section class="filtered-results rejected-results space-y-4 mb-6" 
+                 data-filter-section="rejected" 
+                 style="display: none;">
+            <!-- Rejected jobs will be moved here dynamically -->
+        </section>
+
+        <!-- Jobs Listing Container -->
+        <section class="position-listing" data-section="positions-container">
+            <div class="positions-grid space-y-4">
+
+                <!-- Position Card Template Structure -->
+                <article class="position-card bg-base-100 rounded-lg shadow p-6 relative" 
+                         data-status="not-applied" 
+                         data-position-id="pos-001">
+                    <button class="position-action remove-action absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                            data-action="delete"
+                            aria-label="Delete job application">
+                        <img src="assets/delete.png" alt="Delete" class="h-5 w-5">
+                    </button>
+                    
+                    <header class="position-header">
+                        <h3 class="organization-name text-lg font-bold text-neutral">TechNova Solutions</h3>
+                        <p class="position-title text-sm text-gray-600">Senior Full Stack Developer</p>
+                        <p class="position-details text-xs text-gray-500 mt-1">Hybrid • Full-time • $145,000 - $190,000</p>
+                    </header>
+                    
+                    <div class="position-status-container mt-3">
+                        <span class="position-status badge badge-outline text-blue-600 border-blue-600 text-xs">NOT APPLIED</span>
+                    </div>
+                    
+                    <div class="position-description text-sm text-gray-700 mt-3">
+                        Lead development of enterprise web applications using modern JavaScript frameworks. Mentor junior developers and drive technical excellence.
+                    </div>
+                    
+                    <footer class="position-actions flex gap-2 mt-4">
+                        <button class="position-action interview-action btn btn-sm btn-outline border-green-500 text-green-600 hover:bg-green-50"
+                                data-action="interview">
+                            INTERVIEW
+                        </button>
+                        <button class="position-action rejected-action btn btn-sm btn-outline border-red-500 text-red-600 hover:bg-red-50"
+                                data-action="rejected">
+                            REJECTED
+                        </button>
+                    </footer>
+                </article>
+
+                <article class="position-card bg-base-100 rounded-lg shadow p-6 relative" 
+                         data-status="not-applied" 
+                         data-position-id="pos-002">
+                    <button class="position-action remove-action absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                            data-action="delete"
+                            aria-label="Delete job application">
+                        <img src="assets/delete.png" alt="Delete" class="h-5 w-5">
+                    </button>
+                    
+                    <header class="position-header">
+                        <h3 class="organization-name text-lg font-bold text-neutral">Quantum Dynamics Inc</h3>
+                        <p class="position-title text-sm text-gray-600">UI/UX Designer</p>
+                        <p class="position-details text-xs text-gray-500 mt-1">Seattle, WA • Contract • $95,000 - $135,000</p>
+                    </header>
+                    
+                    <div class="position-status-container mt-3">
+                        <span class="position-status badge badge-outline text-blue-600 border-blue-600 text-xs">NOT APPLIED</span>
+                    </div>
+                    
+                    <div class="position-description text-sm text-gray-700 mt-3">
+                        Design intuitive user interfaces for cutting-edge quantum computing applications. Collaborate with research teams on breakthrough technologies.
+                    </div>
+                    
+                    <footer class="position-actions flex gap-2 mt-4">
+                        <button class="position-action interview-action btn btn-sm btn-outline border-green-500 text-green-600 hover:bg-green-50"
+                                data-action="interview">
+                            INTERVIEW
+                        </button>
+                        <button class="position-action rejected-action btn btn-sm btn-outline border-red-500 text-red-600 hover:bg-red-50"
+                                data-action="rejected">
+                            REJECTED
+                        </button>
+                    </footer>
+                </article>
+
+                <article class="position-card bg-base-100 rounded-lg shadow p-6 relative" 
+                         data-status="not-applied" 
+                         data-position-id="pos-003">
+                    <button class="position-action remove-action absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                            data-action="delete"
+                            aria-label="Delete job application">
+                        <img src="assets/delete.png" alt="Delete" class="h-5 w-5">
+                    </button>
+                    
+                    <header class="position-header">
+                        <h3 class="organization-name text-lg font-bold text-neutral">NextGen Robotics</h3>
+                        <p class="position-title text-sm text-gray-600">Robotics Software Engineer</p>
+                        <p class="position-details text-xs text-gray-500 mt-1">Austin, TX • Full-time • $165,000 - $210,000</p>
+                    </header>
+                    
+                    <div class="position-status-container mt-3">
+                        <span class="position-status badge badge-outline text-blue-600 border-blue-600 text-xs">NOT APPLIED</span>
+                    </div>
+                    
+                    <div class="position-description text-sm text-gray-700 mt-3">
+                        Develop autonomous navigation systems for industrial robots. Work with ROS, Python, and advanced sensor technologies.
+                    </div>
+                    
+                    <footer class="position-actions flex gap-2 mt-4">
+                        <button class="position-action interview-action btn btn-sm btn-outline border-green-500 text-green-600 hover:bg-green-50"
+                                data-action="interview">
+                            INTERVIEW
+                        </button>
+                        <button class="position-action rejected-action btn btn-sm btn-outline border-red-500 text-red-600 hover:bg-red-50"
+                                data-action="rejected">
+                            REJECTED
+                        </button>
+                    </footer>
+                </article>
+
+                <article class="position-card bg-base-100 rounded-lg shadow p-6 relative" 
+                         data-status="not-applied" 
+                         data-position-id="pos-004">
+                    <button class="position-action remove-action absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                            data-action="delete"
+                            aria-label="Delete job application">
+                        <img src="assets/delete.png" alt="Delete" class="h-5 w-5">
+                    </button>
+                    
+                    <header class="position-header">
+                        <h3 class="organization-name text-lg font-bold text-neutral">BioTech Innovations</h3>
+                        <p class="position-title text-sm text-gray-600">Bioinformatics Developer</p>
+                        <p class="position-details text-xs text-gray-500 mt-1">Boston, MA • Full-time • $120,000 - $160,000</p>
+                    </header>
+                    
+                    <div class="position-status-container mt-3">
+                        <span class="position-status badge badge-outline text-blue-600 border-blue-600 text-xs">NOT APPLIED</span>
+                    </div>
+                    
+                    <div class="position-description text-sm text-gray-700 mt-3">
+                        Analyze genomic data and develop computational tools for drug discovery. PhD in Bioinformatics or related field required.
+                    </div>
+                    
+                    <footer class="position-actions flex gap-2 mt-4">
+                        <button class="position-action interview-action btn btn-sm btn-outline border-green-500 text-green-600 hover:bg-green-50"
+                                data-action="interview">
+                            INTERVIEW
+                        </button>
+                        <button class="position-action rejected-action btn btn-sm btn-outline border-red-500 text-red-600 hover:bg-red-50"
+                                data-action="rejected">
+                            REJECTED
+                        </button>
+                    </footer>
+                </article>
+
+                <article class="position-card bg-base-100 rounded-lg shadow p-6 relative" 
+                         data-status="not-applied" 
+                         data-position-id="pos-005">
+                    <button class="position-action remove-action absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                            data-action="delete"
+                            aria-label="Delete job application">
+                        <img src="assets/delete.png" alt="Delete" class="h-5 w-5">
+                    </button>
+                    
+                    <header class="position-header">
+                        <h3 class="organization-name text-lg font-bold text-neutral">SpaceX Technologies</h3>
+                        <p class="position-title text-sm text-gray-600">Aerospace Software Engineer</p>
+                        <p class="position-details text-xs text-gray-500 mt-1">Hawthorne, CA • Full-time • $180,000 - $230,000</p>
+                    </header>
+                    
+                    <div class="position-status-container mt-3">
+                        <span class="position-status badge badge-outline text-blue-600 border-blue-600 text-xs">NOT APPLIED</span>
+                    </div>
+                    
+                    <div class="position-description text-sm text-gray-700 mt-3">
+                        Develop mission-critical software for spacecraft operations. Work on next-generation rocket control systems and satellite communications.
+                    </div>
+                    
+                    <footer class="position-actions flex gap-2 mt-4">
+                        <button class="position-action interview-action btn btn-sm btn-outline border-green-500 text-green-600 hover:bg-green-50"
+                                data-action="interview">
+                            INTERVIEW
+                        </button>
+                        <button class="position-action rejected-action btn btn-sm btn-outline border-red-500 text-red-600 hover:bg-red-50"
+                                data-action="rejected">
+                            REJECTED
+                        </button>
+                    </footer>
+                </article>
+
+                <article class="position-card bg-base-100 rounded-lg shadow p-6 relative" 
+                         data-status="not-applied" 
+                         data-position-id="pos-006">
+                    <button class="position-action remove-action absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                            data-action="delete"
+                            aria-label="Delete job application">
+                        <img src="assets/delete.png" alt="Delete" class="h-5 w-5">
+                    </button>
+                    
+                    <header class="position-header">
+                        <h3 class="organization-name text-lg font-bold text-neutral">Green Energy Solutions</h3>
+                        <p class="position-title text-sm text-gray-600">Environmental Data Scientist</p>
+                        <p class="position-details text-xs text-gray-500 mt-1">Portland, OR • Remote • $105,000 - $145,000</p>
+                    </header>
+                    
+                    <div class="position-status-container mt-3">
+                        <span class="position-status badge badge-outline text-blue-600 border-blue-600 text-xs">NOT APPLIED</span>
+                    </div>
+                    
+                    <div class="position-description text-sm text-gray-700 mt-3">
+                        Analyze climate data and develop predictive models for renewable energy optimization. Python, R, and GIS experience required.
+                    </div>
+                    
+                    <footer class="position-actions flex gap-2 mt-4">
+                        <button class="position-action interview-action btn btn-sm btn-outline border-green-500 text-green-600 hover:bg-green-50"
+                                data-action="interview">
+                            INTERVIEW
+                        </button>
+                        <button class="position-action rejected-action btn btn-sm btn-outline border-red-500 text-red-600 hover:bg-red-50"
+                                data-action="rejected">
+                            REJECTED
+                        </button>
+                    </footer>
+                </article>
+
+                <article class="position-card bg-base-100 rounded-lg shadow p-6 relative" 
+                         data-status="not-applied" 
+                         data-position-id="pos-007">
+                    <button class="position-action remove-action absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                            data-action="delete"
+                            aria-label="Delete job application">
+                        <img src="assets/delete.png" alt="Delete" class="h-5 w-5">
+                    </button>
+                    
+                    <header class="position-header">
+                        <h3 class="organization-name text-lg font-bold text-neutral">Meta Reality Labs</h3>
+                        <p class="position-title text-sm text-gray-600">AR/VR Developer</p>
+                        <p class="position-details text-xs text-gray-500 mt-1">Menlo Park, CA • Full-time • $160,000 - $220,000</p>
+                    </header>
+                    
+                    <div class="position-status-container mt-3">
+                        <span class="position-status badge badge-outline text-blue-600 border-blue-600 text-xs">NOT APPLIED</span>
+                    </div>
+                    
+                    <div class="position-description text-sm text-gray-700 mt-3">
+                        Build immersive virtual reality experiences and augmented reality applications. Unity, Unreal Engine, and C# expertise required.
+                    </div>
+                    
+                    <footer class="position-actions flex gap-2 mt-4">
+                        <button class="position-action interview-action btn btn-sm btn-outline border-green-500 text-green-600 hover:bg-green-50"
+                                data-action="interview">
+                            INTERVIEW
+                        </button>
+                        <button class="position-action rejected-action btn btn-sm btn-outline border-red-500 text-red-600 hover:bg-red-50"
+                                data-action="rejected">
+                            REJECTED
+                        </button>
+                    </footer>
+                </article>
+
+                <article class="position-card bg-base-100 rounded-lg shadow p-6 relative" 
+                         data-status="not-applied" 
+                         data-position-id="pos-008">
+                    <button class="position-action remove-action absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                            data-action="delete"
+                            aria-label="Delete job application">
+                        <img src="assets/delete.png" alt="Delete" class="h-5 w-5">
+                    </button>
+                    
+                    <header class="position-header">
+                        <h3 class="organization-name text-lg font-bold text-neutral">Blockchain Ventures</h3>
+                        <p class="position-title text-sm text-gray-600">Smart Contract Developer</p>
+                        <p class="position-details text-xs text-gray-500 mt-1">Remote • Full-time • $140,000 - $190,000</p>
+                    </header>
+                    
+                    <div class="position-status-container mt-3">
+                        <span class="position-status badge badge-outline text-blue-600 border-blue-600 text-xs">NOT APPLIED</span>
+                    </div>
+                    
+                    <div class="position-description text-sm text-gray-700 mt-3">
+                        Design and implement secure smart contracts on Ethereum and other blockchain platforms. Solidity and Web3.js expertise essential.
+                    </div>
+                    
+                    <footer class="position-actions flex gap-2 mt-4">
+                        <button class="position-action interview-action btn btn-sm btn-outline border-green-500 text-green-600 hover:bg-green-50"
+                                data-action="interview">
+                            INTERVIEW
+                        </button>
+                        <button class="position-action rejected-action btn btn-sm btn-outline border-red-500 text-red-600 hover:bg-red-50"
+                                data-action="rejected">
+                            REJECTED
+                        </button>
+                    </footer>
+                </article>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- JavaScript Module -->
+    <script src="index.js"></script>
+</body>
+
+</html>
